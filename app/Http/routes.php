@@ -11,6 +11,32 @@
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
+});
+*/
+
+Route::get('/home', function () {
+    return view('home');
+});
+
+Route::get('/enviarSms', function () {
+    return view('sms_unico');
+});
+
+Route::get('/enviarLote', function () {
+    return view('smsLote');
+});
+
+Route::get('/usuarios', function () {
+    return view('usuarios');
+});
+
+Route::get('/listaBranca', function () {
+    return view('lista_branca');
+});
+
+Route::get('/sobre', function () {
+    return view('sobre');
 });
