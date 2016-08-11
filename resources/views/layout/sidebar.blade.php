@@ -82,7 +82,7 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/sobre">
                         <i class="fa fa-code-fork"></i>
                         <span>Sobre</span>
                     </a>

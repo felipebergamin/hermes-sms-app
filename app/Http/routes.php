@@ -38,3 +38,30 @@ Route::get('/listaBranca', function () {
 Route::get('/sobre', function () {
     return view('sobre');
 });
+
+Route::group(['prefix' => 'api', 'middleware' => 'web'], function () {
+
+    Route::group(['prefix' => 'user', 'middleware' => 'web'], function () {
+
+        Route::get('', function () {
+            return "Devolver a lista de usuarios";
+        });
+
+        Route::get('{id}', function ($id) {
+            return "Devolver o usuário de id $id";
+        });
+
+        Route::post('', function () {
+            return "Criar um novo usuário com base nos dados recebidos";
+        });
+
+        Route::put('{id}', function ($id) {
+            return "Atualizar usuário de id $id";
+        });
+
+        Route::delete('{id}', function ($id) {
+            return "Deletar usuário de id $id";
+        });
+    });
+
+});
