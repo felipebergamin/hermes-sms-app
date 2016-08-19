@@ -65,3 +65,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'web'], function () {
     });
 
 });
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
