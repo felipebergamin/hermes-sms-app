@@ -26,6 +26,9 @@ class CreateSmsTable extends Migration
 
             $table->foreign('usuario_id')->references('id')->on('users');
             $table->foreign('lote_sms_id')->references('id')->on('lote_sms');
+
+            $table->index('descricao_destinatario');
+            $table->index('texto');
         });
     }
 
