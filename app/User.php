@@ -8,6 +8,9 @@ class User extends Authenticatable
 {
     protected $table = 'users';
     protected $dateFormat ='U';
+    protected $casts = [
+        'habilitado' => 'boolean'
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'habilitado',
     ];
 
     /**

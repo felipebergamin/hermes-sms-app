@@ -2,7 +2,7 @@
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
-        <title>Hermes AceTech | Início</title>
+        <title>Hermes | Ace Tech</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <!-- Bootstrap 3.3.4 -->
         <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -31,6 +31,17 @@
         <script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <!-- AdminLTE App -->
         <script src="/dist/js/app.min.js" type="text/javascript"></script>
+
+        <script src="/js/toastr.js"></script>
+        <link rel="stylesheet" href="/css/toastr.css"/>
+
+        <script src="/js/angular.min.js"></script>
+
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        </script>
     </head>
     <body class="skin-blue sidebar-mini">
         <div class="wrapper">

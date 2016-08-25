@@ -20,80 +20,101 @@
         <section class="content">
 
             <!-- row tiles -->
-            <div class="row">
+            <div class="row" ng-app="hermes_app" ng-controller="users_ctrl" ng-init="init()">
 
                 <section class="col-lg-4">
                     <div class="box box-info">
                         <div class="box-header">
-                            <h3 class="box-title">Add novo usuário...</h3>
+                            <h3 class="box-title" data-ng-if="form.function == 'create'">Add novo usuário...</h3>
+                            <h3 class="box-title" data-ng-if="form.function == 'update'">Alterar usuário...</h3>
                         </div>
-                        <form id="form-usuarios">
-                            <input type="hidden" name="ativo" value="true">
+                        <form ng-submit="formSubmit()">
+                            <input type="hidden" value="1" ng-model="form.user.habilitado">
 
                             <div class="box-body">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                    <input class="form-control" placeholder="Nome" type="text" name="name">
+                                    <input class="form-control" placeholder="Nome" type="text" ng-model="form.user.name">
                                 </div>
                                 <br>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                                    <input class="form-control" placeholder="E-mail" type="email" name="email">
+                                    <input class="form-control" placeholder="E-mail" type="email" ng-model="form.user.email">
                                 </div>
                                 <br>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                    <input class="form-control" placeholder="Senha" type="password" name="password">
+                                    <input class="form-control" placeholder="Senha" type="password" ng-model="form.user.password">
                                 </div>
                                 <br>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                    <input class="form-control" placeholder="Confirme a senha" type="password" name="confirm_password">
+                                    <input class="form-control" placeholder="Confirme a senha" type="password" ng-model="form.user.password_confirmation">
                                 </div>
 
                                 <br>
 
+                                <!--
+                                //                             _
+                                //   _ __   ___ _ __ _ __ ___ (_)___ ___  ___   ___ ___
+                                //  | '_ \ / _ \ '__| '_ ` _ \| / __/ __|/ _ \ / _ \ __|
+                                //  | |_) |  __/ |  | | | | | | \__ \__ \ (_) |  __\__ \
+                                //  | .__/ \___|_|  |_| |_| |_|_|___/___/\___/ \___|___/
+                                //  |_|
+                                -->
                                 <h4>Permissões</h4>
+                                <!-- ['enviar_sms', 'visualizar_envios', 'visualizar_relatorios', 'manter_usuarios', 'enviar_lote_sms'] -->
+
                                 <div class="form-group">
+
                                     <div class="checkbox">
                                         <label data-toggle="tooltip" title="O usuário pode enviar SMS's únicos?">
-                                            <input type="checkbox" checked="yes" name="envia_sms">
+                                            <input type="checkbox" checked="yes" ng-model="form.user.permissoes.enviar_sms">
                                             Enviar SMS
                                         </label>
                                     </div>
 
                                     <div class="checkbox">
-                                        <label data-toggle="tooltip" title="O usuário pode enviar lotes de SMS?">
-                                            <input type="checkbox" name="ver_logs">
-                                            Enviar lote de Sms
+                                        <label>
+                                            <input type="checkbox" ng-model="form.user.permissoes.enviar_lote_sms"
+                                                   data-toggle="tooltip" title="O usuário pode enviar lotes de SMS">
+                                            Enviar lote de SMS
                                         </label>
                                     </div>
 
                                     <div class="checkbox">
-                                        <label data-toggle="tooltip" title="O usuário pode visualizar os SMS's já enviados?">
-                                            <input type="checkbox" name="controle_usuarios">
-                                            Visualizar SMS enviados
+                                        <label>
+                                            <input type="checkbox" ng-model="form.user.permissoes.visualizar_envios"
+                                                   data-toggle="tooltip" title="O usuário pode visualizar SMS enviados anteriormente?">
+                                            Visualizar registro de envios
                                         </label>
                                     </div>
 
                                     <div class="checkbox">
-                                        <label data-toggle="tooltip" title="O usuário pode cadastrar e alterar outros usuários?">
-                                            <input type="checkbox" name="controle_usuarios">
+                                        <label>
+                                            <input type="checkbox" ng-model="form.user.permissoes.visualizar_relatorios"
+                                                   data-toggle="tooltip" title="O usuário pode visualizar os relatórios do sistema?">
+                                            Visualizar relatórios
+                                        </label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-model="form.user.permissoes.manter_usuarios"
+                                                   data-toggle="tooltip" title="O usuário pode cadastrar e alterar outros usuários?">
                                             Manter usuários
                                         </label>
                                     </div>
 
-                                    <div class="checkbox">
-                                        <label data-toggle="tooltip" title="O usuário pode visualizar relatórios de uso do sistema?">
-                                            <input type="checkbox" name="controle_usuarios">
-                                            Visualizar relatórios
-                                        </label>
-                                    </div>
                                 </div>
                             </div><!-- /.box-body -->
                             <div class="box-footer">
-                                <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Inserir usuário">Inserir</button>
-                                <button type="reset" class="btn btn-danger" data-toggle="tooltip" title="Limpar formulário">Limpar</button>
+                                <button type="submit" class="btn btn-primary">
+                                    @{{ form.function == 'create' ? 'Adicionar' : 'Atualizar' }}
+                                </button>
+                                <button type="reset" class="btn btn-danger" ng-click="form.reset()">
+                                    Cancelar
+                                </button>
                             </div>
                         </form>
                     </div><!-- /.box-->
@@ -116,28 +137,33 @@
                                 </thead>
                                 <tbody>
 
-                                <tr id="id_usu">
+                                <tr ng-repeat="user in users">
                                     <td>
                                         <div class="btn-group">
 
-                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Desativar usuário"><i class="fa fa-remove"></i>
+                                            <button type="button" ng-if="user.habilitado" data-ng-click="disableUser(user)"
+                                                    class="btn btn-default btn-sm" data-toggle="tooltip" title="Desativar usuário">
+                                                <i class="fa fa-remove"></i>
                                             </button>
 
-                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Ativar usuário"><i class="fa fa-check"></i>
+                                            <button type="button" ng-if="! user.habilitado" data-ng-click="enableUser(user)"
+                                                    class="btn btn-default btn-sm" data-toggle="tooltip" title="Ativar usuário">
+                                                <i class="fa fa-check"></i>
                                             </button>
 
-                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Editar usuário"><i class="fa fa-pencil"></i>
+                                            <button type="button" class="btn btn-default btn-sm" ng-click="editUser(user, $index)"
+                                                    data-toggle="tooltip" title="Editar usuário"><i class="fa fa-pencil"></i>
                                             </button>
                                         </div>
                                     </td>
-                                    <td>id_usu</td>
-                                    <td>nome_usu</td>
+                                    <td>@{{ user.name }}</td>
+                                    <td>@{{ user.email }}</td>
                                     <td>
-                                        <span class="label label-danger">
+                                        <span ng-if="! user.habilitado" class="label label-danger" data-toggle="tooltip" title="Usuário desativado no sistema">
                                             desativado
                                         </span>
 
-                                        <span class="label label-success">
+                                        <span ng-if="user.habilitado" class="label label-success" data-toggle="tooltip" title="Usuário ativado no sistema">
                                             ativado
                                         </span>
                                     </td>
@@ -153,5 +179,7 @@
 
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
+
+    <script src="/js/usuarios_angular_app.js"></script>
 
 @endsection

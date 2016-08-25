@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
     Route::get('/', function () {
         return view('start');
     });
@@ -24,10 +24,6 @@ Route::group(['middleware' => ['web', 'auth']], function () {
         return view('smsLote');
     });
 
-    Route::get('/usuarios', function () {
-        return view('usuarios');
-    });
-
     Route::get('/listaBranca', function () {
         return view('lista_branca');
     });
@@ -36,31 +32,40 @@ Route::group(['middleware' => ['web', 'auth']], function () {
         return view('sobre');
     });
 
-
+    Route::get('/usuarios', 'UserController@create');
 
     Route::group(['prefix' => 'api'], function () {
+
+
         Route::group(['prefix' => 'user'], function () {
 
-            Route::get('', function () {
-                return "Devolver a lista de usuarios";
-            });
+            /**
+             * Obter lista de usuários
+             */
+            Route::get('', 'UserController@index');
 
-            Route::get('{id}', function ($id) {
-                return "Devolver o usuário de id $id";
-            });
+            /**
+             * Obter um usuário específico
+             */
+            Route::get('{id}', 'UserController@show');
 
-            Route::post('', function () {
-                return "Criar um novo usuário com base nos dados recebidos";
-            });
+            /**
+             * Criar novo usuário com base nos dados recebidos
+             */
+            Route::post('', 'UserController@store');
 
-            Route::put('{id}', function ($id) {
-                return "Atualizar usuário de id $id";
-            });
+            /**
+             * Atualiza as informações de um usuário com base nos dados recebidos
+             */
+            Route::put('{id}', 'UserController@update');
 
-            Route::delete('{id}', function ($id) {
-                return "Deletar usuário de id $id";
-            });
+            /**
+             * Requisição delete, não implementada no Controller, pois não é permitido deletar usuários
+             */
+            Route::delete('{id}', 'UserController@destroy');
         });
+
+
     });
 });
 

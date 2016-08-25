@@ -42,20 +42,20 @@
                             <!-- The user image in the navbar-->
                             <img src="/dist/img/logo_acetech.jpg" class="user-image" alt="User Image"/>
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs">Usuário</span>
+                            <span class="hidden-xs">{{ \Illuminate\Support\Facades\Auth::user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
                             <li class="user-header">
                                 <img src="/dist/img/logo_acetech.jpg" class="img-circle" alt="User Image" />
                                 <p>
-                                    Usuário
+                                    {{ \Illuminate\Support\Facades\Auth::user()->name }}
                                 </p>
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">
+                                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">
                                         <i class="fa fa-sign-out"></i>
                                         Sair
                                     </a>

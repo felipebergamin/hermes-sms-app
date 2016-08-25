@@ -9,8 +9,8 @@
                     <img src="/dist/img/logo_acetech.jpg" class="img-circle" alt="User Image" />
                 </div>
                 <div class="pull-left info">
-                    <p>Usuário</p>
-                    <a href="#"><i class="fa fa-sign-out"></i> Sair</a>
+                    <p>{{ \Illuminate\Support\Facades\Auth::user()->name }}</p>
+                    <a href="{{ url('/logout') }}"><i class="fa fa-sign-out"></i> Sair</a>
                 </div>
             </div>
 

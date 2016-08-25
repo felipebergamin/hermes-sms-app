@@ -16,6 +16,7 @@ class CreatePermissoesTable extends Migration
             $table->boolean('enviar_sms');
             $table->boolean('enviar_lote_sms');
             $table->boolean('visualizar_envios');
+            $table->boolean('visualizar_relatorios');
             $table->boolean('manter_usuarios');
             $table->integer('usuario_id')->unsigned();
             $table->foreign('usuario_id')->references('id')->on('users');
