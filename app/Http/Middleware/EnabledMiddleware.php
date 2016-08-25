@@ -22,6 +22,6 @@ class EnabledMiddleware
             }
         }
 
-        return redirect()->to('http://www.google.com.br');
+        return redirect('disabled');
     }
 }

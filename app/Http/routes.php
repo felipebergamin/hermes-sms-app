@@ -11,6 +11,8 @@
 |
 */
 
+
+
 Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
     Route::get('/', function () {
         return view('start');
@@ -72,3 +74,7 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get('/disabled', function () {
+    return view('errors.user_disabled');
+});
