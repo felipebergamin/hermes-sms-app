@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Permissoes;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\User;
 use App\Http\Requests\UserRequest;
-use App\Http\Requests;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -73,12 +70,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\User  $id
+     * @return JsonResponse
      */
     public function show(User $id)
     {
-        return $id;
+        return new JsonResponse(200, $id);
     }
 
     /**
@@ -93,35 +90,47 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param UserRequest $request
+     * @param User $id
+     * @return JsonResponse
      */
     public function update(UserRequest $request, User $id)
     {
         $id->fill($request->all());
         if( $request->has('password') ) {
-            $id->password = bcrypt( $request->get('password') );
+            $id->setAttribute('password', bcrypt($request->get('password')));
         }
 
+        // se o usuário for salvo com sucesso
         if ( $id->save() ) {
+            // se o usuário sendo alterado não é o usuário logado
+            // ou seja, se o usuário NÃO está alterando seu próprio cadastro
+            if($id->getAttribute('id') != Auth::user()->id) {
+                // altera as permissões do usuário e salva no banco de dados
+                // isso porque um usuário não pode alterar suas próprias permissões
+                $id->permissoes->fill($request->only('permissoes')['permissoes']);
+
+                // salva no banco de dados
+                if(!$id->permissoes->save()) {
+                    return new JsonResponse(['message'=>'Os dados do usuário foram alterados! Mas ocorreu um erro ao alterar a permissoes!'], 500);
+                };
+            }
+
+            // se chegar aqui, os dados do usuário foram alterados,
+            // mas ele está tentando alterar suas próprias permissões
             return new JsonResponse(['message' => 'Usuário atualizado com sucesso!'], 200);
         }
         else {
+            // aqui, houve erro ao alterar o usuário no banco de dados
             return new JsonResponse(['message' => 'Erro ao atualizar o usuário no banco de dados!'], 500);
         }
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(User $id)
+    public function destroy()
     {
-        // Exclusão de usuários não é permitida
+        return new JsonResponse(['message'=>'Não é permitido remover usuários!'], 501);
     }
 }

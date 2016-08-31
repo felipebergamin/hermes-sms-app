@@ -13,6 +13,7 @@ class CreatePermissoesTable extends Migration
     public function up()
     {
         Schema::create('permissoes', function (Blueprint $table) {
+            $table->increments('id');
             $table->boolean('enviar_sms');
             $table->boolean('enviar_lote_sms');
             $table->boolean('visualizar_envios');

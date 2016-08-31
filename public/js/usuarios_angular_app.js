@@ -72,6 +72,7 @@ app.controller('users_ctrl', function ($scope, $http) {
      * @param response
      */
     $scope.handleErrorResponse = function (response) {
+        console.log(response);
         switch (response.status) {
             case 200:
                 toastr.info('O servidor retornou status 200, mas a resposta foi tratada como erro! Informe o desenvolvedor!');
