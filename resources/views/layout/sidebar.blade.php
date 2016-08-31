@@ -6,7 +6,7 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="/dist/img/logo_acetech.jpg" class="img-circle" alt="User Image" />
+                    <img src="{{url('/dist/img/logo_acetech.jpg')}}" class="img-circle" alt="User Image" />
                 </div>
                 <div class="pull-left info">
                     <p>{{ \Illuminate\Support\Facades\Auth::user()->name }}</p>
@@ -20,7 +20,7 @@
                 <!-- Optionally, you can add icons to the links -->
 
                 <li>
-                    <a href="/home">
+                    <a href="{{url('/')}}">
                         <i class="fa fa-home"></i>
                         <span>Início</span>
                     </a>
@@ -34,7 +34,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li>
-                            <a href="/enviarSms">
+                            <a href="{{url('/enviarSms')}}">
                                 <i class="fa fa-user"></i>
                                 Unitário
                             </a>
@@ -42,7 +42,7 @@
                     </ul>
                     <ul class="treeview-menu">
                         <li id="li_configuracoes">
-                            <a href="/enviarLote">
+                            <a href="{{url('/enviarLote')}}">
                                 <i class="fa fa-users"></i>
                                 Em lote
                             </a>
@@ -58,7 +58,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li id="li_configuracoes">
-                            <a href="/usuarios">
+                            <a href="{{url('/usuarios')}}">
                                 <i class="fa fa-users"></i>
                                     Usuários
                             </a>
@@ -66,7 +66,7 @@
                     </ul>
                     <ul class="treeview-menu">
                         <li id="li_configuracoes">
-                            <a href="/listaBranca">
+                            <a href="{{'/listaBranca'}}">
                                 <i class="fa fa-angellist"></i>
                                 Lista branca
                             </a>
@@ -82,7 +82,7 @@
                 </li>
 
                 <li>
-                    <a href="/sobre">
+                    <a href="{{'/sobre'}}">
                         <i class="fa fa-code-fork"></i>
                         <span>Sobre</span>
                     </a>

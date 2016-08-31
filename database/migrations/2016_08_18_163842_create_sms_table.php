@@ -15,7 +15,7 @@ class CreateSmsTable extends Migration
         Schema::create('sms', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('descricao_destinatario');
+            $table->string('descricao_destinatario', 60);
             $table->string('texto', 160);
             $table->string('numero_destinatario', 11);
             $table->integer('usuario_id')->unsigned();

@@ -6,7 +6,14 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Bem vindo
+                <?php
+                $h = date("H");
+
+                if($h >= 0 && $h < 12)
+                    echo "Bom dia";
+                else
+                    echo "Boa tarde";
+                ?>
                 <small>Inicio</small>
             </h1>
         </section>

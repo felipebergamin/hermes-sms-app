@@ -8,7 +8,7 @@ class Sms extends Model
 {
     protected $table = 'sms';
     protected $dateFormat = 'U';
-    protected $fillable = ['id', 'descricao_destinatario', 'texto', 'numero_destinatario'];
+    protected $fillable = ['descricao_destinatario', 'texto', 'numero_destinatario'];
 
     public function user() {
         return $this->belongsTo('\App\User', 'usuario_id', 'id');

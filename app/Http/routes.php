@@ -18,9 +18,7 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
         return view('start');
     });
 
-    Route::get('/enviarSms', function () {
-        return view('sms_unico');
-    });
+    Route::get('/enviarSms', 'SmsController@create');
 
     Route::get('/enviarLote', function () {
         return view('smsLote');
@@ -38,7 +36,12 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
 
     Route::group(['prefix' => 'api'], function () {
 
-
+        //
+        //   _   _ ___  ___ _ __
+        //  | | | / __|/ _ \ '__|
+        //  | |_| \__ \  __/ |
+        //   \__,_|___/\___|_|
+        //
         Route::group(['prefix' => 'user'], function () {
 
             /**
@@ -65,6 +68,20 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
              * Requisição delete, não implementada no Controller, pois não é permitido deletar usuários
              */
             Route::delete('{id}', 'UserController@destroy');
+        });
+
+        //
+        //   ___ _ __ ___  ___
+        //  / __| '_ ` _ \/ __|
+        //  \__ \ | | | | \__ \
+        //  |___/_| |_| |_|___/
+        //
+        Route::group(['prefix' => 'sms'], function () {
+            Route::get('', 'SmsController@index');
+
+            Route::get('{id}', 'SmsController@show');
+
+            Route::post('', 'SmsController@store');
         });
 
 

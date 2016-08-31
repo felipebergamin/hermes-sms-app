@@ -35,7 +35,8 @@
         <script src="/js/toastr.js"></script>
         <link rel="stylesheet" href="/css/toastr.css"/>
 
-        <script src="/js/angular.min.js"></script>
+        <script src="/bower_components/angular/angular.js"></script>
+        <script src="/bower_components/angular-ui-mask/dist/mask.js"></script>
 
         <script>
             $(document).ready(function(){
