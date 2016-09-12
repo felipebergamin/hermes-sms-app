@@ -75,7 +75,7 @@ class UserController extends Controller
      */
     public function show(User $id)
     {
-        return new JsonResponse(200, $id);
+        return new JsonResponse($id);
     }
 
     /**

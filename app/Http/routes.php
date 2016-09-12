@@ -20,9 +20,7 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
 
     Route::get('/enviarSms', 'SmsController@create');
 
-    Route::get('/enviarLote', function () {
-        return view('smsLote');
-    });
+    Route::get('/enviarLote', 'SmsLoteController@create');
 
     Route::get('/listaBranca', function () {
         return view('lista_branca');
@@ -84,6 +82,20 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
             Route::post('', 'SmsController@store');
         });
 
+
+        //                       _       _
+        //   ___ _ __ ___  ___  | | ___ | |_ ___
+        //  / __| '_ ` _ \/ __| | |/ _ \| __/ _ \
+        //  \__ \ | | | | \__ \ | | (_) | |_  __/
+        //  |___/_| |_| |_|___/ |_|\___/ \__\___|
+        //
+        Route::group(['prefix' => 'smslote'], function () {
+            Route::get('', 'SmsLoteController@index');
+
+            Route::get('{id}', 'SmsLoteController@show');
+
+            Route::post('', 'SmsLoteController@store');
+        });
 
     });
 });

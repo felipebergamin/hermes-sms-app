@@ -9,7 +9,7 @@
             <div class="row text-center">
                 <div class="col-xs-12">
                     <h1 class="page-header">
-                        <i class="fa fa-send-o"></i> Sistema Hermes de SMS
+                        <i class="fa fa-send-o"></i> Sistema Hermes para envio de SMS
                     </h1>
                 </div>
                 <!-- /.col -->
