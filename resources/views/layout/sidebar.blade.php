@@ -52,6 +52,30 @@
 
                 <li class="treeview">
                     <a href="#">
+                        <i class="fa fa-archive"></i>
+                        <span>Consultar</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>
+                            <a href="{{url('/consultarSms')}}">
+                                <i class="fa fa-file-o"></i>
+                                SMS enviados
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="treeview-menu">
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-files-o"></i>
+                                Lotes enviados
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="treeview">
+                    <a href="#">
                         <i class="fa fa-gears"></i>
                         <span>Configurações</span>
                         <i class="fa fa-angle-left pull-right"></i>

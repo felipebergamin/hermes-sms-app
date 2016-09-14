@@ -20,6 +20,10 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
 
     Route::get('/enviarSms', 'SmsController@create');
 
+    Route::get('/consultarSms', function () {
+        return view('consultar_sms');
+    });
+
     Route::get('/enviarLote', 'SmsLoteController@create');
 
     Route::get('/listaBranca', function () {
@@ -80,6 +84,16 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
             Route::get('{id}', 'SmsController@show');
 
             Route::post('', 'SmsController@store');
+
+            //                           _
+            //   ___  ___  __ _ _ __ ___| |__
+            //  / __|/ _ \/ _` | '__/ __| '_ \
+            //  \__ \  __/ (_| | | | (__| | | |
+            //  |___/\___|\__,_|_|  \___|_| |_|
+            //
+            Route::group(['prefix' => 'search'], function () {
+                Route::get('dateinterval', 'SmsController@searchDateInterval');
+            });
         });
 
 

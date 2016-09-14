@@ -18,7 +18,10 @@ class SmsController extends Controller
      *
      * @return JsonResponse
      */
-    public function index() {
+    public function index(Request $request) {
+        if($request->has('withRelationships'))
+            return new JsonResponse(Sms::with('user')->with('loteSms')->get());
+
         return new JsonResponse(Sms::all(), 200);
     }
 
@@ -57,6 +60,13 @@ class SmsController extends Controller
 
     public function send(Sms $id) {
 
+    }
+
+    public function searchDateInterval(Request $request) {
+        if($request->has(['start', 'end']))
+            return new JsonResponse(Sms::with('user')->with('loteSms')->whereBetween('created_at', [$request->only('start'), $request->only('end')])->get());
+
+        return new JsonResponse(['message' => 'Intervalo de busca não definido!'], 400);
     }
 
     // public function edit() { }

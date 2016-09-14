@@ -1,0 +1,1 @@
+angular.module('hermes_app', ['response_message_handler']);

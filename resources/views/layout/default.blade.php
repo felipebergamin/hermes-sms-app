@@ -38,6 +38,8 @@
         <script src="/bower_components/angular/angular.js"></script>
         <script src="/bower_components/angular-ui-mask/dist/mask.js"></script>
 
+        @yield('imports')
+
         <script>
             $(document).ready(function(){
                 $('[data-toggle="tooltip"]').tooltip();
