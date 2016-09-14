@@ -24,6 +24,10 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
         return view('consultar_sms');
     });
 
+    Route::get('/consultarLote', function () {
+        return view('consultar_lote');
+    });
+
     Route::get('/enviarLote', 'SmsLoteController@create');
 
     Route::get('/listaBranca', function () {
@@ -109,6 +113,10 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
             Route::get('{id}', 'SmsLoteController@show');
 
             Route::post('', 'SmsLoteController@store');
+
+            Route::group(['prefix' => 'search'], function () {
+                Route::get('dateinterval', 'SmsLoteController@searchDateInterval');
+            });
         });
 
     });

@@ -66,7 +66,7 @@
                     </ul>
                     <ul class="treeview-menu">
                         <li>
-                            <a href="#">
+                            <a href="{{url('/consultarLote')}}">
                                 <i class="fa fa-files-o"></i>
                                 Lotes enviados
                             </a>

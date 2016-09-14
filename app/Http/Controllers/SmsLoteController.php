@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\SmsLoteRequest;
 use App\LoteSms;
 use App\Sms;
@@ -53,5 +54,21 @@ class SmsLoteController extends Controller
         }
 
         return new JsonResponse(['message' => "{$count['ok']} mensagens enviadas. {$count['fail']} com falha!"]);
+    }
+
+    public function searchDateInterval(Request $request) {
+        // return new JsonResponse(['message' => 'hehehe']);
+
+        if ($request->has(['start', 'end'])) {
+            $result = LoteSms::with('user')->whereBetween('created_at', [$request->only('start'), $request->only('end')])->get();
+
+            foreach ($result as $lote) {
+                $lote->sms_count = Sms::where('lote_sms_id', $lote->id)->count();
+            }
+
+            return new JsonResponse($result);
+        }
+
+        return new JsonResponse(['message' => 'Intervalo de pesquisa não definido!'], 400);
     }
 }
