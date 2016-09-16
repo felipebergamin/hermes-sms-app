@@ -129,3 +129,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('/disabled', function () {
     return view('errors.user_disabled');
 });
+
+Route::get('/register', function () {
+    return redirect('/login');
+});
