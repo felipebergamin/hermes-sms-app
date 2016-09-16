@@ -36,6 +36,8 @@
         <link rel="stylesheet" href="/css/toastr.css"/>
 
         <script src="/bower_components/angular/angular.js"></script>
+        <script src="/js/modules/response_message_handler.js"></script>
+        <script src="/js/app.js"></script>
         <script src="/bower_components/angular-ui-mask/dist/mask.js"></script>
 
         @yield('imports')

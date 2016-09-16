@@ -119,6 +119,12 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
             });
         });
 
+
+
+        Route::group(['prefix' => 'gwsms'], function () {
+            Route::get('credits', 'MobiprontoController@getCredits');
+        });
+
     });
 });
 
