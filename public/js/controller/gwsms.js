@@ -15,7 +15,6 @@ angular.module('hermes_app')
             }).then(
                 function s(response) {
                     $scope.credits.total = response.data.result;
-                    toastr.success('Atualizado!');
                 },
                 response_message_handler.handle
             );
