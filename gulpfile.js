@@ -1,16 +1,14 @@
-var elixir = require('laravel-elixir');
+var gulp = require("gulp"),
+    uglify = require("gulp-uglify"),
+    rename = require("gulp-rename");
 
-/*
- |--------------------------------------------------------------------------
- | Elixir Asset Management
- |--------------------------------------------------------------------------
- |
- | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Sass
- | file for our application, as well as publishing vendor resources.
- |
- */
+gulp.task("minify_js", function () {
+    return gulp.src('./public/js/**/*.js')
+        .pipe(uglify())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('./public/dist/angular/'));
+});
 
-elixir(function(mix) {
-    mix.sass('app.scss');
+gulp.task("watch_and_minify", function () {
+    return gulp.watch(['./public/js/**/*.js'], ['minify_js']);
 });

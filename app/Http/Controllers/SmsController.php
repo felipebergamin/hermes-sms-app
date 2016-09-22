@@ -40,12 +40,23 @@ class SmsController extends Controller
      * @param SmsRequest $request
      * @return JsonResponse
      */
-    public function store(SmsRequest $request) {
+    public function store(SmsRequest $request, MobiprontoController $mb) {
+        $sms = new Sms($request->all());
+
+        if ($mb && $sms) {
+            if($mb->sendSms($sms));
+                Auth::user()->sms()->save($sms);
+
+            return new JsonResponse($sms);
+        }
+
+        /*
         if (Auth::user()->sms()->create($request->all())) {
             return new JsonResponse(['message' => 'Sms salvo com sucesso!']);
         } else {
             return new JsonResponse(['message' => 'Impossível salvar o Sms'], 500);
         }
+        */
     }
 
     /**

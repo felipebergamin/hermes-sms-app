@@ -17,7 +17,11 @@ class CreateSmsTable extends Migration
 
             $table->string('descricao_destinatario', 60);
             $table->string('texto', 160);
-            $table->string('numero_destinatario', 11);
+            $table->string('numero_destinatario', 16);
+            $table->boolean('enviado');
+            $table->string('msg_status', 50)->nullable();
+            $table->string('id_gateway', 40)->nullable();
+
             $table->integer('usuario_id')->unsigned();
             $table->integer('lote_sms_id')->unsigned()->nullable();
 

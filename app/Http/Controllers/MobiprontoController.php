@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Sms;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
+use League\Flysystem\Exception;
+use Psy\Util\Json;
 
 class MobiprontoController extends Controller
 {
@@ -14,6 +18,16 @@ class MobiprontoController extends Controller
     private $token = 'aF9F85'; // o token
     private $user = '27999017915'; //o codigo principal user
     private $aux_user = ''; // auxiliar user
+    private $client = null;
+
+    public function __construct()
+    {
+        try {
+            $this->client = $this->initSoapClient();
+        } catch (Exception $e) {
+            return new JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
 
     public $errors = array(
         '000' => 'Sucesso-Mensagem enviada com sucesso',
@@ -53,9 +67,7 @@ class MobiprontoController extends Controller
                 'Token' => $this->token
             ];
 
-            $cli = $this->initSoapClient();
-
-            $result = $cli->$call($params);
+            $result = $this->client->$call($params);
 
             if ($this->hasError($call, $result))
                 return new JsonResponse([
@@ -66,8 +78,68 @@ class MobiprontoController extends Controller
                 return new JsonResponse(['result' => $result->MPG_CreditsResult]);
 
         } catch (Exception $e) {
-            echo($e->getMessage());
+            return $e->getMessage();
         }
+    }
+
+    public function sendSms(Sms $sms) {
+        $call = "MPG_Send_LMS";
+
+        if(env('APP_TESTING', false)) {
+            $sms->setAttribute('enviado', true);
+            $sms->setAttribute('id_gateway', "TEST_".str_random(10));
+
+            return true;
+        }
+        if ($this->client) {
+            try {
+                $params = [
+                    'Credencial' => $this->credencial,
+                    'Token' => $this->token,
+                    'Principal_User' => "",
+                    'Aux_User' => Auth::user()->name,
+                    'Mobile' => preg_replace("/^(\d{2})(\d{9})/", "+55($1)$2$3$4", $sms->getAttribute('numero_destinatario')),
+                    'Message' => $sms->getAttribute("texto")
+                ];
+
+
+                $result = $this->client->$call($params)->MPG_Send_LMSResult;
+
+                // verifica se o código de retorno começa com '000:'
+                // se começar, significa que o envio ao MobiPronto foi bem sucedido
+                if (preg_match("/^000:/i", $result)) {
+                    $sms->setAttribute('enviado', true);
+                    $sms->setAttribute('id_gateway', explode(":", $result)[1] );
+
+                    return true;
+                }
+                else { // se o código de retorno é diferente, então houve um erro
+                    $sms->setAttribute('enviado', false);
+                    $sms->setAttribute('msg_status', $this->translateErrorCode($result));
+
+                    return false;
+                }
+
+                /*
+                    object(stdClass)#4 (1) {
+                       ["MPG_Send_LMSResult"]=>
+                        string(19) "000:MPG000236180474"
+                    }
+                 */
+            } catch (Exception $e) {
+                $sms->setAttribute('enviado', false);
+                $sms->setAttribute('erro', $e->getMessage());
+            }
+        }
+
+        return false;
+    }
+
+    public function translateErrorCode($code) {
+        if (array_key_exists($code, $this->errors))
+            return "$code - {$this->errors[$code]}";
+
+        return $code;
     }
 
     public function hasError($call, $response)

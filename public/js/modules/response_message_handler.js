@@ -16,7 +16,7 @@ angular.module('response_message_handler').provider('response_message_handler', 
                             toastr.error(response.data[prop]);
                         break;
                     default:
-                        toastr.error(response.data.message ? response.data.message : 'Um erro desconhecido ocorreu! Atualize a página!', 'Erro '.concat(response.status));
+                        toastr.error(response.data.message ? response.data.message : 'Um erro desconhecido ocorreu!', 'Erro '.concat(response.status));
                 }
             }
         };

@@ -34,7 +34,10 @@ app.controller('sms_ctrl', function ($scope, $http) {
                     toastr.success("O Sms foi enviado com sucesso!");
                     $scope.clearForm();
                 },
-                $scope.handleErrorResponse
+                function fail(response) {
+                    console.log(response);
+                    toastr.error('Fail');
+                }
             )
     };
 });

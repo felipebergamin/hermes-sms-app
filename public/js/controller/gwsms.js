@@ -16,7 +16,10 @@ angular.module('hermes_app')
                 function s(response) {
                     $scope.credits.total = response.data.result;
                 },
-                response_message_handler.handle
+                function f(response) {
+                    console.log(response);
+                    response_message_handler.handle(response);
+                }
             );
 
             $timeout(function () {

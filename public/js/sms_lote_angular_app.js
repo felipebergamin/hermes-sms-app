@@ -169,12 +169,19 @@ angular.module("hermes_app", ['response_message_handler'])
                         'block_envio': false
                     };
 
+                    // TODO: escrever uma função que analise telefone, celular e celular2 e selecione o primeiro que estiver correto
+
+                    // se o celular não pode ser validado, algumas funções tentam "consertar"
                     if (!$scope.validateCellphoneNumber(registro.celular)) {
 
+                        // verifica se só falta o 9º dígito no número
                         if ($scope.checkMissingNinthDigit(registro.celular)) {
+                            // se falta o 9º dígito, esta função adiciona o dígito
                             registro.celular = $scope.putNinthDigit(registro.celular);
                         }
-                        else {
+                        else { // se não é o 9º dígito que está faltando
+
+                            // então esse SMS não pode ser enviado
                             registro.enviar = false;
                             registro.block_envio = true;
                         }
@@ -198,6 +205,7 @@ angular.module("hermes_app", ['response_message_handler'])
          * Estrutura os dados e envia para o servidor
          */
         $scope.confirmOperation = function () {
+            /*
             var params = {
                 texto: $scope.form.lote.texto,
                 descricao: $scope.form.lote.descricao,
@@ -210,11 +218,16 @@ angular.module("hermes_app", ['response_message_handler'])
                         params.destinatarios.push(val);
                 }
             );
+            */
 
             $http({
                 method: 'post',
                 url: '/api/smslote',
-                data: params
+                data: {
+                    texto: $scope.form.lote.texto,
+                    descricao: $scope.form.lote.descricao,
+                    destinatarios: $scope.destinatarios
+                }
             }).then(
                 response_message_handler.handle,
                 response_message_handler.handle
