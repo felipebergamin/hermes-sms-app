@@ -25,16 +25,17 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    <!--
-                    <li class="dropdown messages-menu">
 
-                        <a href="/hermes/smsbox/smsbox_inbox.php">
-                            <i class="fa fa-envelope-o"></i>
-                            <span class="label label-success">4</span>
-                        </a>
+                    @if(env('APP_TESTING', false))
+                        <li data-toggle="tooltip" title="O sistema está em modo de teste!">
 
-                    </li>
-                    -->
+                            <a href="#">
+                                <i class="fa fa-flag"></i>
+                                <span class="label label-danger">!</span>
+                            </a>
+
+                        </li>
+                    @endif
 
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
