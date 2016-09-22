@@ -27,11 +27,13 @@
 
 
                     @if(env('APP_TESTING', false))
-                        <li data-toggle="tooltip" title="O sistema está em modo de teste!">
+                        <li>
 
                             <a href="#">
-                                <i class="fa fa-flag"></i>
+                                <i class="fa fa-warning"></i>
+                                <!--
                                 <span class="label label-danger">!</span>
+                                -->
                             </a>
 
                         </li>
