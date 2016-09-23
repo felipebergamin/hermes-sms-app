@@ -22,11 +22,12 @@ class MobiprontoController extends Controller
 
     public function __construct()
     {
-        try {
-            $this->client = $this->initSoapClient();
-        } catch (Exception $e) {
-            return new JsonResponse(['message' => $e->getMessage()], 500);
-        }
+        if(! env('APP_TESTING', false))
+            try {
+                $this->client = $this->initSoapClient();
+            } catch (Exception $e) {
+                return new JsonResponse(['message' => $e->getMessage()], 500);
+            }
     }
 
     public $errors = array(
