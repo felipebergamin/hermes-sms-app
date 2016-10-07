@@ -30,9 +30,7 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
 
     Route::get('/enviarLote', 'SmsLoteController@create');
 
-    Route::get('/listaBranca', function () {
-        return view('lista_branca');
-    });
+    Route::get('/listaBranca', 'ListaBrancaController@create');
 
     Route::get('/sobre', function () {
         return view('sobre');
@@ -119,8 +117,28 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
             });
         });
 
+        //   _ _     _          _
+        //  | (_)___| |_ __ _  | |__  _ __ __ _ _ __   ___ __ _
+        //  | | / __| __/ _` | | '_ \| '__/ _` | '_ \ / __/ _` |
+        //  | | \__ \ |_ (_| | | |_) | | | (_| | | | | (__ (_| |
+        //  |_|_|___/\__\__,_| |_.__/|_|  \__,_|_| |_|\___\__,_|
+        //
+        Route::group(['prefix' => 'listabranca'], function () {
+            Route::get('', 'ListaBrancaController@index');
 
+            Route::get('{id}', 'ListaBrancaController@show');
 
+            Route::post('', 'ListaBrancaController@store');
+
+            Route::delete('{id}', 'ListaBrancaController@destroy');
+        });
+
+        //               _
+        //    __ _  __ _| |_ _____      ____ _ _   _   ___ _ __ ___  ___
+        //   / _` |/ _` | __/ _ \ \ /\ / / _` | | | | / __| '_ ` _ \/ __|
+        //  | (_| | (_| | |_  __/\ V  V / (_| | |_| | \__ \ | | | | \__ \
+        //   \__, |\__,_|\__\___| \_/\_/ \__,_|\__, | |___/_| |_| |_|___/
+        //   |___/                             |___/
         Route::group(['prefix' => 'gwsms'], function () {
             Route::get('credits', 'MobiprontoController@getCredits');
         });
