@@ -15,7 +15,7 @@ use Psy\Util\Json;
 class MobiprontoController extends Controller
 {
     private $wsdl = 'http://www.mpgateway.com/v_3_00/sms/service.asmx?wsdl';
-    private $credencial = 'BD8FE4C9C7AC0259150C21A1EA39EFB5FFCB9A7';
+    private $credencial = 'BD8FE4C9C7AC0259150C21A1EA39EFB5FFCB9A7D';
     private $token = 'aF9F85'; // o token
     private $user = '27999017915'; //o codigo principal user
     private $aux_user = ''; // auxiliar user
