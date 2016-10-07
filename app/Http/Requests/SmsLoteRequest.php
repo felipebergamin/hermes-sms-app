@@ -30,8 +30,8 @@ class SmsLoteRequest extends Request
             'texto' => 'required|string|min:10|max:160',
             'descricao' => 'required|string|max:50',
             'destinatarios' => 'required|array',
-            'destinatarios.*.nome' => 'required_with:destinatarios|string|max:60',
-            'destinatarios.*.celular' => 'required_with:destinatarios|string|size:11'
+            'destinatarios.*.descricao_destinatario' => 'required_with:destinatarios|string|max:60',
+            'destinatarios.*.numero_destinatario' => 'required_with:destinatarios|string|size:11'
         ];
     }
 

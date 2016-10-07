@@ -34,6 +34,7 @@ class SmsLoteController extends Controller
         $count = ['ok' => 0, 'fail' => 0];
         // cria o lote Sms no banco de dados
         $lote = Auth::user()->loteSms()->create($request->only(['descricao']));
+        $mensagens = [];
 
         // se o lote foi salvo no BD com sucesso
         if ($lote) {
@@ -46,44 +47,42 @@ class SmsLoteController extends Controller
                 // cria um novo objeto Sms de acordo com os dados recebidos do Front
                 $sms = new Sms([
                     'texto' => $request->input('texto'),
-                    'descricao_destinatario' => $dest['nome'],
-                    'numero_destinatario' => $dest['celular']
+                    'descricao_destinatario' => $dest['descricao_destinatario'],
+                    'numero_destinatario' => $dest['numero_destinatario']
                 ]);
                 // seta os id para as foreign keys do banco
                 $sms->setAttribute('usuario_id', Auth::user()->getAttribute('id'));
                 $sms->setAttribute('lote_sms_id', $lote->getAttribute('id'));
 
-                /*
-                    TODO: Implementar o envio de cada Sms
-                    Ter cuidado para não enviar os Sms que vierem marcados com [enviar = false]
-                    Estes devem apenas ser salvos no banco, junto com o motivo de não serem enviados
-                */
-
-                if (!boolval($dest['enviar'])) {
+                // se o sms não deve ser enviado
+                if (boolval($dest['enviar']) === false) {
+                    // define que o sms não foi enviado
                     $sms->setAttribute('enviado', false);
 
+                    // a mensagem de status tem a intenção de informar o porquê do sms não ter sido enviado
+                    // se há uma mensagem de status no SMS
                     if (array_key_exists('msg_status', $dest))
+                        // seta o atributo no objeto com a mensagem de status
                         $sms->setAttribute('msg_status', $dest['msg_status']);
-                    else
+                    else // se não há msg de status
                         $sms->setAttribute('msg_status', 'Não informado');
 
-                    Auth::user()->sms()->save($sms);
-                } else {
+                    // salva o objeto no banco de dados
+                    // Auth::user()->sms()->save($sms);
+                } else { // se não (se o objeto pode ser enviado)
                     $mb->sendSms($sms);
-                    Auth::user()->sms()->save($sms);
+                    // Auth::user()->sms()->save($sms);
                 }
 
-                // se o objeto for salvo com sucesso no banco de dados
-                if ($sms->save())
-                    $count['ok']++;
-                else
-                    $count['fail']++;
+                // salva o objeto no banco de dados
+                Auth::user()->sms()->save($sms);
+                array_push($mensagens, $sms);
             }
         } else {
-            return new JsonResponse(['message' => 'Houve um erro inesperado no servidor!'], 500);
+            return new JsonResponse(['message' => 'Não foi possível registrar o lote de mensagens!'], 500);
         }
 
-        return new JsonResponse(['message' => "{$count['ok']} mensagens enviadas. {$count['fail']} com falha!"]);
+        return new JsonResponse($mensagens);
     }
 
     public function searchDateInterval(Request $request)

@@ -38,10 +38,8 @@
                                 <div class="form-group">
                                     <label for="texto">Texto</label>
                                     <textarea name="texto" class="form-control" placeholder="Texto do Sms"
-                                              rows="3"
-                                              maxlength="160" ng-model="form.lote.texto"
-                                              ng-init="form.lote.texto = ''"></textarea>
-
+                                              rows="3" maxlength="160"
+                                              ng-model="form.lote.texto"></textarea>
                                 </div>
 
                                 <p class="pull-right">@{{ form.lote.texto.length }} / 160 caracteres
@@ -51,11 +49,13 @@
 
                             <div class="box-footer">
                                 <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-sm btn-primary btn-flat" ng-click="loadFile()">
+                                    <button type="button" class="btn btn-sm btn-primary btn-flat" ng-click="loadFile()"
+                                            ng-disabled="form.loading">
                                         <i class="fa fa-check"></i>
                                         Carregar
                                     </button>
-                                    <button type="reset" class="btn btn-sm btn-default btn-flat" ng-click="formReset()">
+                                    <button type="reset" class="btn btn-sm btn-default btn-flat" ng-click="formReset()"
+                                            ng-disabled="form.loading">
                                         <i class="fa fa-eraser"></i>
                                         Limpar
                                     </button>
@@ -64,6 +64,10 @@
 
                         </form>
 
+                        <!-- Efeito de carregameto -->
+                        <div class="overlay" ng-if="form.loading">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -82,7 +86,8 @@
 
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-                                    <input type="text" class="form-control input-sm" placeholder="Pesquise qualquer coisa" ng-model="form.searchValue">
+                                    <input type="text" class="form-control input-sm"
+                                           placeholder="Pesquise qualquer coisa" ng-model="form.searchValue">
                                     <span class="glyphicon glyphicon-search form-control-feedback"></span>
                                 </div>
                             </div>
@@ -91,26 +96,30 @@
                         <div class="box-body no-padding">
 
 
-
                             <div class="mailbox-controls">
 
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip" data-title="Marcar todos" ng-click="toggleCheckboxes(true)">
+                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip"
+                                            data-title="Marcar todos" ng-click="toggleCheckboxes(true)">
                                         <i class="fa fa-check-square"></i>
                                     </button>
-                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip" data-title="Desmarcar todos" ng-click="toggleCheckboxes(false)">
+                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip"
+                                            data-title="Desmarcar todos" ng-click="toggleCheckboxes(false)">
                                         <i class="fa fa-square-o"></i>
                                     </button>
-                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip" data-title="Inverter seleção" ng-click="toggleCheckboxes()">
+                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip"
+                                            data-title="Inverter seleção" ng-click="toggleCheckboxes()">
                                         <i class="fa fa-random"></i>
                                     </button>
                                 </div>
 
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip" data-title="Confirmar envio" data-ng-click="confirmOperation()">
+                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip"
+                                            data-title="Confirmar envio" data-ng-click="confirmOperation()">
                                         <i class="fa fa-thumbs-o-up"></i>
                                     </button>
-                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip" data-title="Cancelar" data-ng-click="cancelOperation()">
+                                    <button type="button" class="btn btn-default btn-flat btn-sm" data-toggle="tooltip"
+                                            data-title="Cancelar" data-ng-click="cancelOperation()">
                                         <i class="fa fa-thumbs-o-down"></i>
                                     </button>
                                 </div>
@@ -118,14 +127,17 @@
                                 <div class="pull-right">
                                     1-50/200
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+                                        <button type="button" class="btn btn-default btn-sm"><i
+                                                    class="fa fa-chevron-left"></i></button>
+                                        <button type="button" class="btn btn-default btn-sm"><i
+                                                    class="fa fa-chevron-right"></i></button>
                                     </div>
                                     <!-- /.btn-group -->
                                 </div>
                                 <!-- /.pull-right -->
                             </div>
 
+                            <!-- FIXME: organizar os dados mostrados na tabela, o CPF/CNPJ não é salvo no BD -->
                             <table class="table table-bordered table-striped dataTable">
                                 <thead>
                                 <tr>
@@ -137,13 +149,21 @@
                                 </thead>
                                 <tbody>
 
-                                <tr ng-repeat="d in destinatarios | filter:form.searchValue | orderBy:'nome'" ng-class="d.block_envio ? 'text-danger' : ''">
+                                <tr ng-repeat="d in destinatarios | filter:form.searchValue | orderBy:'nome'"
+                                    ng-class="d.block_envio ? 'text-danger' : ''">
                                     <td>
                                         <input type="checkbox" ng-model="d.enviar" ng-disabled="d.block_envio">
                                     </td>
-                                    <td>@{{ d.nome }}</td>
+                                    <td>@{{ d.descricao_destinatario }}</td>
                                     <td>@{{ d.cpfcnpj }}</td>
-                                    <td>@{{ d.celular }}</td>
+                                    <td ng-class="d.block_envio ? 'text-center' : ''">
+                                        <small class="label label-danger" data-toggle="tooltip"
+                                               title="@{{ d.msg_status }}" ng-if="d.block_envio">
+                                            <i class="fa fa-question-circle"></i>
+                                        </small>
+
+                                        @{{ (d.numero_destinatario ? d.numero_destinatario : '') }}
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

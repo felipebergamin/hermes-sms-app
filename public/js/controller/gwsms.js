@@ -14,7 +14,7 @@ angular.module('hermes_app')
                 method: 'get'
             }).then(
                 function s(response) {
-                    $scope.credits.total = response.data.result;
+                    $scope.credits.total = Math.round(response.data.result);
                 },
                 function f(response) {
                     console.log(response);

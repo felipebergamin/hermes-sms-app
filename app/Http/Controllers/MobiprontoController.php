@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Sms;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ use Psy\Util\Json;
 class MobiprontoController extends Controller
 {
     private $wsdl = 'http://www.mpgateway.com/v_3_00/sms/service.asmx?wsdl';
-    private $credencial = 'BD8FE4C9C7AC0259150C21A1EA39EFB5FFCB9A7D';
+    private $credencial = 'BD8FE4C9C7AC0259150C21A1EA39EFB5FFCB9A7';
     private $token = 'aF9F85'; // o token
     private $user = '27999017915'; //o codigo principal user
     private $aux_user = ''; // auxiliar user
@@ -22,7 +23,7 @@ class MobiprontoController extends Controller
 
     public function __construct()
     {
-        if(! env('APP_TESTING', false))
+        if (!env('APP_TESTING', false))
             try {
                 $this->client = $this->initSoapClient();
             } catch (Exception $e) {
@@ -62,6 +63,11 @@ class MobiprontoController extends Controller
     public function getCredits()
     {
         $call = "MPG_Credits";
+
+        if(env('APP_TESTING', false)) {
+            return new JsonResponse(['result' => -1]);
+        }
+
         try {
             $params = [
                 'Credencial' => $this->credencial,
@@ -83,12 +89,13 @@ class MobiprontoController extends Controller
         }
     }
 
-    public function sendSms(Sms $sms) {
+    public function sendSms(Sms $sms)
+    {
         $call = "MPG_Send_LMS";
 
-        if(env('APP_TESTING', false)) {
+        if (env('APP_TESTING', false)) {
             $sms->setAttribute('enviado', true);
-            $sms->setAttribute('id_gateway', "TEST_".str_random(10));
+            $sms->setAttribute('id_gateway', "TEST_" . str_random(10));
 
             return true;
         }
@@ -110,11 +117,10 @@ class MobiprontoController extends Controller
                 // se começar, significa que o envio ao MobiPronto foi bem sucedido
                 if (preg_match("/^000:/i", $result)) {
                     $sms->setAttribute('enviado', true);
-                    $sms->setAttribute('id_gateway', explode(":", $result)[1] );
+                    $sms->setAttribute('id_gateway', explode(":", $result)[1]);
 
                     return true;
-                }
-                else { // se o código de retorno é diferente, então houve um erro
+                } else { // se o código de retorno é diferente, então houve um erro
                     $sms->setAttribute('enviado', false);
                     $sms->setAttribute('msg_status', $this->translateErrorCode($result));
 
@@ -129,14 +135,15 @@ class MobiprontoController extends Controller
                  */
             } catch (Exception $e) {
                 $sms->setAttribute('enviado', false);
-                $sms->setAttribute('erro', $e->getMessage());
+                $sms->setAttribute('msg_status', $e->getMessage());
             }
         }
 
         return false;
     }
 
-    public function translateErrorCode($code) {
+    public function translateErrorCode($code)
+    {
         if (array_key_exists($code, $this->errors))
             return "$code - {$this->errors[$code]}";
 

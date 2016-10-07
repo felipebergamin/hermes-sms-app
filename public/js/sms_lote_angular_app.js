@@ -5,6 +5,12 @@
 angular.module("hermes_app", ['response_message_handler'])
     .controller("sms_lote_ctrl", function ($scope, $http, response_message_handler) {
         $scope.destinatarios = [];
+        $scope.form = {
+            loading: false,
+            lote: {
+                texto: ''
+            }
+        };
 
         /**
          * Reseta o form e suas variáveis no scopo
@@ -127,10 +133,38 @@ angular.module("hermes_app", ['response_message_handler'])
             return phone;
         };
 
+        var chooseNumber = function (telefones) {
+            // faz um loop entre todos os celulares
+            for (var i = 0; i < telefones.length; i++) {
+                // se o celular é válido, retorna ele como selecionado
+                if ($scope.validateCellphoneNumber(telefones[i])) {
+                    return telefones[i];
+                }
+                else { // se o celular não é válido
+                    // se falta apenas o 9º dígito no número para ele ser válido
+                    if ($scope.checkMissingNinthDigit(telefones[i])) {
+                        // acrescenta o 9º dígito
+                        var newtel = $scope.putNinthDigit(telefones[i]);
+
+                        // verifica novamente se o celular é válido, se for, retorna o número
+                        if ($scope.validateCellphoneNumber(newtel))
+                            return newtel;
+                    }
+                }
+            }
+
+            // caso nenhum número válido seja encontrado, retorna false
+            return false;
+
+        };
+
         /**
          * Lê os registros do arquivo e os coloca na variável $scope.destinatarios
          */
         $scope.loadFile = function () {
+            // TODO: implementar a verificação de lista branca
+            $scope.form.loading = true;
+
             var fs = new FileReader();
 
             // evento onload
@@ -161,30 +195,33 @@ angular.module("hermes_app", ['response_message_handler'])
 
                     // pega as informações necessárias e cria um objeto
                     var registro = {
-                        'nome': td[indexHeader.nome].innerText,
+                        'descricao_destinatario': td[indexHeader.nome].innerText,
                         'cpfcnpj': td[indexHeader.cpfcnpj].innerText,
+                        'telefone': $scope.clearPhoneNumber(td[indexHeader.telefone].innerText),
                         'celular': $scope.clearPhoneNumber(td[indexHeader.celular].innerText),
-                        'celular2': $scope.clearPhoneNumber(td[indexHeader.celular2.innerText]),
+                        'celular2': $scope.clearPhoneNumber(td[indexHeader.celular2].innerText),
                         'enviar': true,
                         'block_envio': false
+                        /*
+                            [enviar] e [block_envio] tem funções diferentes
+                            enviar - opção do usuário enviar ou não o sms (é vinculado com o checkbox na view)
+                            block_envio - o sistema encontrou ou não motivos para não enviar esse SMS,
+                                            pode ser por número de celular inválido, ou o destinatário se encontra
+                                            em lista branca, etc.
+                         */
                     };
 
-                    // TODO: escrever uma função que analise telefone, celular e celular2 e selecione o primeiro que estiver correto
+                    // chama a função que avalia os três números de telefone
+                    // e retorna o primeiro que for um número de celular
+                    registro.numero_destinatario = chooseNumber(
+                        [registro.telefone, registro.celular, registro.celular2]
+                    );
 
-                    // se o celular não pode ser validado, algumas funções tentam "consertar"
-                    if (!$scope.validateCellphoneNumber(registro.celular)) {
-
-                        // verifica se só falta o 9º dígito no número
-                        if ($scope.checkMissingNinthDigit(registro.celular)) {
-                            // se falta o 9º dígito, esta função adiciona o dígito
-                            registro.celular = $scope.putNinthDigit(registro.celular);
-                        }
-                        else { // se não é o 9º dígito que está faltando
-
-                            // então esse SMS não pode ser enviado
-                            registro.enviar = false;
-                            registro.block_envio = true;
-                        }
+                    // se a função retornou false, quer dizer que nenhum dos três números é um celular válido
+                    if(registro.numero_destinatario === false) {
+                        registro.enviar = false;
+                        registro.block_envio = true;
+                        registro.msg_status = 'Nenhum número de celular válido encontrado!'
                     }
 
                     // adiciona o objeto na coleção
@@ -194,6 +231,7 @@ angular.module("hermes_app", ['response_message_handler'])
                 });
 
                 toastr.success("O arquivo foi lido! " + $scope.destinatarios.length + " registros encontrados!");
+                $scope.form.loading = false;
             };
 
             // executa a leitura do arquivo
@@ -205,21 +243,6 @@ angular.module("hermes_app", ['response_message_handler'])
          * Estrutura os dados e envia para o servidor
          */
         $scope.confirmOperation = function () {
-            /*
-            var params = {
-                texto: $scope.form.lote.texto,
-                descricao: $scope.form.lote.descricao,
-                destinatarios: []
-            };
-
-            angular.forEach($scope.destinatarios,
-                function (val) {
-                    if (val.enviar)
-                        params.destinatarios.push(val);
-                }
-            );
-            */
-
             $http({
                 method: 'post',
                 url: '/api/smslote',
@@ -229,7 +252,9 @@ angular.module("hermes_app", ['response_message_handler'])
                     destinatarios: $scope.destinatarios
                 }
             }).then(
-                response_message_handler.handle,
+                function s(response) {
+                    $scope.destinatarios = response.data;
+                },
                 response_message_handler.handle
             )
 
