@@ -69,4 +69,12 @@ class ListaBrancaController extends Controller
 
         return new JsonResponse(['message' => 'Registro não encontrado!'], 500);
     }
+
+    public function consultar($valor) {
+        if(isset($valor)) {
+            $hasElements = count(ListaBranca::whereIn('valor', explode("|", $valor))->get()) > 0;
+
+            return ($hasElements ? 'true' : 'false');
+        }
+    }
 }

@@ -101,6 +101,16 @@
                     <div class="box" ng-if="registros.length > 0">
                         <div class="box-header">
                             <h3 class="box-title">Listagem</h3>
+
+                            <div class="box-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar" ng-model="listagem.busca">
+
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div><!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <table class="table table-hover">
@@ -114,7 +124,7 @@
                                 </thead>
                                 <tbody>
 
-                                <tr ng-repeat="reg in registros">
+                                <tr ng-repeat="reg in registros | filter:listagem.busca">
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Remover CPF" ng-click="delete(reg.id)">

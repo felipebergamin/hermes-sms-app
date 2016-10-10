@@ -156,13 +156,15 @@
                                     </td>
                                     <td>@{{ d.descricao_destinatario }}</td>
                                     <td>@{{ d.cpfcnpj }}</td>
+
                                     <td ng-class="d.block_envio ? 'text-center' : ''">
                                         <small class="label label-danger" data-toggle="tooltip"
                                                title="@{{ d.msg_status }}" ng-if="d.block_envio">
                                             <i class="fa fa-question-circle"></i>
                                         </small>
 
-                                        @{{ (d.numero_destinatario ? d.numero_destinatario : '') }}
+                                        <div ng-if="!d.block_envio" ng-bind="d.numero_destinatario">
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>

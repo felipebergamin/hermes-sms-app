@@ -131,6 +131,9 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
             Route::post('', 'ListaBrancaController@store');
 
             Route::delete('{id}', 'ListaBrancaController@destroy');
+
+            // verifica se {valor} está na lista branca
+            Route::get('consultar/{valor}', 'ListaBrancaController@consultar');
         });
 
         //               _

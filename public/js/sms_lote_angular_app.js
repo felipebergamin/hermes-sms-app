@@ -155,14 +155,42 @@ angular.module("hermes_app", ['response_message_handler'])
 
             // caso nenhum número válido seja encontrado, retorna false
             return false;
+        };
 
+        var checkWhiteList = function (obj, callback) {
+            val = $scope.clearPhoneNumber(obj.cpfcnpj);
+            val += "|";
+            val += $scope.clearPhoneNumber(obj.numero_destinatario);
+
+            $http({
+                method: "get",
+                url: "/api/listabranca/consultar/" + val
+            }).then(
+                function (response) {
+                    callback( response.data === 'true' );
+                },
+                function (response) {
+                    callback(null);
+                    response_message_handler.handle(response);
+                }
+            );
+        };
+
+        var markToSend = function (obj) {
+            obj.enviar = true;
+            obj.block_envio = false;
+        };
+        
+        var markToDontSend = function (obj, msg_status) {
+            obj.enviar = false;
+            obj.block_envio = true;
+            obj.msg_status = msg_status;
         };
 
         /**
          * Lê os registros do arquivo e os coloca na variável $scope.destinatarios
          */
         $scope.loadFile = function () {
-            // TODO: implementar a verificação de lista branca
             $scope.form.loading = true;
 
             var fs = new FileReader();
@@ -203,13 +231,14 @@ angular.module("hermes_app", ['response_message_handler'])
                         'enviar': true,
                         'block_envio': false
                         /*
-                            [enviar] e [block_envio] tem funções diferentes
-                            enviar - opção do usuário enviar ou não o sms (é vinculado com o checkbox na view)
-                            block_envio - o sistema encontrou ou não motivos para não enviar esse SMS,
-                                            pode ser por número de celular inválido, ou o destinatário se encontra
-                                            em lista branca, etc.
+                         [enviar] e [block_envio] tem funções diferentes
+                         enviar - opção do usuário enviar ou não o sms (é vinculado com o checkbox na view)
+                         block_envio - o sistema encontrou ou não motivos para não enviar esse SMS,
+                         pode ser por número de celular inválido, ou o destinatário se encontra
+                         em lista branca, etc.
                          */
                     };
+                    markToSend(registro);
 
                     // chama a função que avalia os três números de telefone
                     // e retorna o primeiro que for um número de celular
@@ -218,10 +247,17 @@ angular.module("hermes_app", ['response_message_handler'])
                     );
 
                     // se a função retornou false, quer dizer que nenhum dos três números é um celular válido
-                    if(registro.numero_destinatario === false) {
-                        registro.enviar = false;
-                        registro.block_envio = true;
-                        registro.msg_status = 'Nenhum número de celular válido encontrado!'
+                    if (registro.numero_destinatario === false) {
+                        markToDontSend(registro, 'Nenhum número de celular válido encontrado!');
+                    }
+                    else { // se os números de telefone são corretos, então verifica se estão em lista branca
+                        checkWhiteList(registro,
+                            function (result) {
+                                if (result === true)
+                                    markToDontSend(registro, "Encontrado na lista branca!");
+                                else if (result === null)
+                                    markToDontSend(registro, "Não foi possível verificar a lista branca! Por precaução, não será enviado!");
+                            })
                     }
 
                     // adiciona o objeto na coleção
@@ -234,7 +270,7 @@ angular.module("hermes_app", ['response_message_handler'])
                 $scope.form.loading = false;
             };
 
-            // executa a leitura do arquivo
+            // executa a leitura assíncrona do arquivo
             fs.readAsText(document.getElementById('file').files[0], 'ISO-8859-15');
         };
 
