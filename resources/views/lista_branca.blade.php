@@ -3,6 +3,8 @@
 @section('imports')
     <script src="/js/modules/response_message_handler.js"></script>
     <script src="/js/app.js"></script>
+    <script src="/js/services/listabrancaAPI.js"></script>
+    <script src="/js/services/notify.js"></script>
     <script src="/js/controller/lista_branca.js"></script>
 @endsection
 
@@ -23,7 +25,7 @@
         </section>
 
         <!-- Main content -->
-        <section class="content" ng-app="hermes_app" ng-controller="lista_branca_ctrl">
+        <section class="content" ng-app="hermes_app" ng-controller="lista_branca_ctrl" ng-init="init()">
 
             <!-- row tiles -->
             <div class="row">

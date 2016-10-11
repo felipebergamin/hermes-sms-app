@@ -1,67 +1,71 @@
 angular.module('hermes_app')
-    .controller('lista_branca_ctrl', function ($scope, $http, response_message_handler) {
+    .controller('lista_branca_ctrl', ['$scope', 'listabrancaAPI', 'notify', controller]);
 
+function controller($scope, listabrancaAPI, notify) {
+
+    $scope.init = function () {
         $scope.form = {
             tipos: ['CPF', 'CNPJ', 'CELULAR']
         };
 
-        // carrega os registros na lista branca
-        $http({
-            method: "get",
-            url: "/api/listabranca"
-        }).then(
-            function s(response) {
-                $scope.registros = response.data;
-            },
-            function f(response) {
-                response_message_handler(response);
-                console.dir(response);
-            }
-        );
+        listabrancaAPI.loadAll()
+            .success(
+                function (data) {
+                    $scope.registros = data;
+                }
+            )
+            .error(
+                function (data) {
+                    notify.error(data.message, 'Erro ao carregar os registros!');
+                    $scope.registros = data;
+                }
+            );
+    };
 
-        $scope.debug = function () {
-            console.log('Debug:');
-            console.dir($scope.form.model);
-        };
-
-        $scope.store = function () {
-            console.dir($scope.form.model);
-
-            $http({
-                method: "post",
-                url: "/api/listabranca",
-                data: $scope.form.model
-            }).then(
-                function s(response) {
-                    toastr.success("Salvo com sucesso!");
-                    $scope.registros.push(response.data);
+    $scope.store = function () {
+        listabrancaAPI.store($scope.form.model)
+            .success(
+                function (data, status) {
+                    notify.success('Salvo com sucesso!');
+                    $scope.registros.push(data);
                     $scope.form.model.descricao = $scope.form.model.valor = '';
-                },
-                function f(response) {
-                    response_message_handler.handle(response);
-                    console.dir(response);
                 }
             )
-        };
+            .error(
+                function (data, status) {
+                    if(status === 422)
+                        notify.showValidationErrors(data);
+                    else
+                        notify.success(data.message, 'Ops! Ocorreu um erro! ' + '(Erro '+status+')' );
+                }
+            );
+    };
 
-        $scope.delete = function (id) {
-
-            $http({
-                method: "delete",
-                url: "/api/listabranca/" + id
-            }).then(
-                function s(response) {
-                    toastr.success((response.data.message ? response.data.message : 'Removido com sucesso!'));
-
-                    for(var i = 0; i < $scope.registros.length; i++) {
-                        if($scope.registros[i].id === id)
-                            $scope.registros.splice(i, 1);
-                    }
-                },
-                function f(response) {
-                    response_message_handler.handle(response);
-                    console.dir(response);
+    $scope.delete = function (id) {
+        listabrancaAPI.delete(id)
+            .success(
+                function (data) {
+                    notify.success(data.message, 'Excluído com sucesso!');
+                    removerDaLista($scope.registros, buscarPorId($scope.registros, id));
                 }
             )
-        }
-    });
+            .error(
+                function (data, status) {
+                    notify.error(data.message, 'Ops! Ocorreu um erro! ' + '(Erro '+status+')' );
+                }
+            );
+    };
+
+    var buscarPorId = function (array, id) {
+        for (var i = 0; i < array.length; i++)
+            if (array[i].id === id)
+                return i;
+        return -1;
+    };
+
+    var removerDaLista = function (array, index) {
+        console.log("removendo index " + index);
+        if (index >= 0)
+            array.splice(index, 1);
+    };
+}

@@ -1,5 +1,13 @@
 @extends('layout.default')
 
+@section('imports')
+    <script src="/js/app.js"></script>
+    <script src="/js/services/notify.js"></script>
+    <script src="/js/services/smsAPI.js"></script>
+    <script src="/js/services/listabrancaAPI.js"></script>
+    <script src="/js/controller/sms_ctrl.js"></script>
+@endsection
+
 @section('content')
 
     <!-- Content Wrapper. Contains page content -->
@@ -21,13 +29,17 @@
 
                             <div class="box box-body">
 
-                                <div class="form-group">
+                                <div class="form-group" ng-class="(form.alertWhiteList ? 'has-warning' : '')">
                                     <label for="numero_destinatario">Destinatário</label>
-                                    <input type="text" name="numero_destinatario" class="form-control" autofocus
-                                           required
+                                    <input type="text" name="numero_destinatario" class="form-control" autofocus required
                                            ng-model="form.sms.numero_destinatario" ui-mask="(99) 9 9999-9999"
+                                           ng-blur="checkWhitelist(form.sms.numero_destinatario)"
                                            ui-mask-placeholder ui-masn-placeholder-char="">
 
+                                    <span class="help-block" ng-if="form.alertWhiteList">
+                                        <i class="fa fa-warning"></i>
+                                        Este número está na lista branca!
+                                    </span>
                                 </div>
 
                                 <div class="form-group">
@@ -65,6 +77,4 @@
             </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
-
-    <script src="/js/sms_angular_app.js"></script>
 @endsection
