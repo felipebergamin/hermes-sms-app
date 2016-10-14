@@ -114,15 +114,13 @@ class UserController extends Controller
                     return new JsonResponse(['message'=>'Os dados do usuário foram alterados! Mas ocorreu um erro ao alterar a permissoes!'], 500);
                 };
             }
-
-            // se chegar aqui, os dados do usuário foram alterados,
-            // mas ele está tentando alterar suas próprias permissões
-            return new JsonResponse(['message' => 'Usuário atualizado com sucesso!'], 200);
         }
         else {
             // aqui, houve erro ao alterar o usuário no banco de dados
             return new JsonResponse(['message' => 'Erro ao atualizar o usuário no banco de dados!'], 500);
         }
+
+        return new JsonResponse(User::where('id', $id->getAttribute('id'))->with('permissoes')->first());
     }
 
     /**

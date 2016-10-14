@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" ng-app="hermes_app">
     <head>
         <meta charset="UTF-8">
         <title>Hermes | Ace Tech</title>
@@ -32,13 +32,13 @@
         <!-- AdminLTE App -->
         <script src="/dist/js/app.min.js" type="text/javascript"></script>
 
-        <script src="/js/toastr.js"></script>
+        <script src="/dist/angular/toastr.min.js"></script>
         <link rel="stylesheet" href="/css/toastr.css"/>
 
-        <script src="/bower_components/angular/angular.js"></script>
-        <script src="/js/modules/response_message_handler.js"></script>
-        <script src="/bower_components/angular-ui-mask/dist/mask.js"></script>
-        <script src="/js/app.js"></script>
+        <script src="/bower_components/angular/angular.min.js"></script>
+        <script src="/dist/angular/modules/response_message_handler.min.js"></script>
+        <script src="/bower_components/angular-ui-mask/dist/mask.min.js"></script>
+        <script src="/dist/angular/app.min.js"></script>
 
 
         @yield('imports')

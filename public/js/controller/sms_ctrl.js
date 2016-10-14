@@ -5,6 +5,15 @@ app.controller('sms_ctrl', ['$scope', 'smsAPI', 'listabrancaAPI', 'notify', cont
 function controller($scope, smsAPI, listabrancaAPI, notify) {
     $scope.url = "/api/sms";
 
+    $scope.form = {
+        alertWhiteList: false,
+        sms: {
+            descricao_destinatario: "",
+            numero_destinatario: "",
+            texto: ""
+        }
+    };
+
     $scope.clearForm = function () {
         $scope.form.sms = {
             descricao_destinatario: "",
@@ -14,18 +23,16 @@ function controller($scope, smsAPI, listabrancaAPI, notify) {
     };
 
     $scope.checkWhitelist = function (val) {
-        listabrancaAPI.has(val)
-            .then(
-                function (response) {
-                    if (response.data === 'true')
-                        $scope.form.alertWhiteList = true;
-                    else
-                        $scope.form.alertWhiteList = false;
-                },
-                function (response) {
-                    console.log(response);
-                }
-            );
+        if ($scope.form.sms.numero_destinatario)
+            listabrancaAPI.has(val)
+                .then(
+                    function (response) {
+                        $scope.form.alertWhiteList = (response.data === 'true');
+                    },
+                    function (response) {
+                        console.log(response);
+                    }
+                );
     };
 
     $scope.formSubmit = function () {

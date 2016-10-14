@@ -30,11 +30,11 @@
                             <div class="box box-body">
 
                                 <div class="form-group" ng-class="(form.alertWhiteList ? 'has-warning' : '')">
-                                    <label for="numero_destinatario">Destinatário</label>
+                                    <label class="control-label" for="numero_destinatario">Destinatário</label>
                                     <input type="text" name="numero_destinatario" class="form-control" autofocus required
-                                           ng-model="form.sms.numero_destinatario" ui-mask="(99) 9 9999-9999"
+                                           placeholder="Número de celular do destinatário" ng-model="form.sms.numero_destinatario"
                                            ng-blur="checkWhitelist(form.sms.numero_destinatario)"
-                                           ui-mask-placeholder ui-masn-placeholder-char="">
+                                           ui-mask="(99) 9 9999-9999" ui-mask-placeholder>
 
                                     <span class="help-block" ng-if="form.alertWhiteList">
                                         <i class="fa fa-warning"></i>

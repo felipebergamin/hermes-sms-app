@@ -1,7 +1,12 @@
 @extends('layout.default')
 
-@section('content')
+@section('imports')
+    <script src="/dist/angular/services/notify.min.js"></script>
+    <script src="/dist/angular/services/usersAPI.min.js"></script>
+    <script src="/dist/angular/controller/users_ctrl.min.js"></script>
+@endsection
 
+@section('content')
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -20,7 +25,7 @@
         <section class="content">
 
             <!-- row tiles -->
-            <div class="row" ng-app="hermes_app" ng-controller="users_ctrl" ng-init="init()">
+            <div class="row" ng-controller="users_ctrl" ng-init="init()">
 
                 <section class="col-lg-4">
                     <div class="box box-info">
@@ -180,6 +185,6 @@
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 
-    <script src="/js/usuarios_angular_app.js"></script>
+
 
 @endsection

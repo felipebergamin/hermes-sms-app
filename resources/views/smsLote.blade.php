@@ -1,5 +1,10 @@
 @extends('layout.default')
 
+@section('imports')
+    <script src="/js/modules/response_message_handler.js"></script>
+    <script src="/dist/angular/controller/sms_lote_ctrl.min.js"></script>
+@endsection
+
 @section('content')
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -12,7 +17,7 @@
 
         <!-- Main content -->
         <section class="content">
-            <div class="row" ng-app="hermes_app" ng-controller="sms_lote_ctrl">
+            <div class="row" ng-controller="sms_lote_ctrl">
                 <div class="col-sm-4">
                     <div class="box box-default">
 
@@ -179,8 +184,5 @@
             </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
-
-    <script src="/js/modules/response_message_handler.js"></script>
-    <script src="/js/sms_lote_angular_app.js"></script>
 
 @endsection
