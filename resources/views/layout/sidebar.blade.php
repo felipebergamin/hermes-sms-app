@@ -90,7 +90,7 @@
                     </ul>
                     <ul class="treeview-menu">
                         <li id="li_configuracoes">
-                            <a href="{{'/listaBranca'}}">
+                            <a href="{{url('/listaBranca')}}">
                                 <i class="fa fa-angellist"></i>
                                 Lista branca
                             </a>
@@ -99,7 +99,7 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="{{url('/relatorio')}}">
                         <i class="fa fa-info"></i>
                         <span>Relatórios</span>
                     </a>

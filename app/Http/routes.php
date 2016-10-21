@@ -18,6 +18,10 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
         return view('start');
     });
 
+    Route::get('/relatorio', function () {
+        return view('relatorio');
+    });
+
     Route::get('/enviarSms', 'SmsController@create');
 
     Route::get('/consultarSms', function () {
@@ -146,6 +150,19 @@ Route::group(['middleware' => ['web', 'auth', 'enabled']], function () {
             Route::get('credits', 'MobiprontoController@getCredits');
         });
 
+
+        //            _       _             _
+        //   _ __ ___| | __ _| |_ ___  _ __(_) ___  ___
+        //  | '__/ _ \ |/ _` | __/ _ \| '__| |/ _ \/ __|
+        //  | | |  __/ | (_| | |_ (_) | |  | | (_) \__ \
+        //  |_|  \___|_|\__,_|\__\___/|_|  |_|\___/|___/
+        //
+        Route::group(['prefix' => 'relatorio'], function () {
+
+            Route::get('{dataInicio}/{dataFim}', 'ReportController@makeReportFromInterval');
+
+            Route::get('', 'ReportController@makeReport');
+        });
     });
 });
 
